@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// For SQLite (dev only - Prisma v7 requires adapter):
+// See: https://pris.ly/d/client-config
+
+model User {
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  content      String?
+  coverImage   String?
+  githubUrl    String?
+  liveUrl      String?
+  technologies String[]
+  status       String   @default("completed")
+  featured     Boolean  @default(false)
+  pinned       Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Skill {
+  id           String   @id @default(cuid())
+  name         String
+  icon         String?
+  category     String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model Certificate {
+  id              String   @id @default(cuid())
+  title           String
+  issuer          String
+  imageUrl        String?
+  pdfUrl          String?
+  verificationUrl String?
+  issueDate       DateTime?
+  expiryDate      DateTime?
+  description     String?
+  displayOrder    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Resume {
+  id        String   @id @default(cuid())
+  title     String
+  fileUrl   String
+  fileSize  Int?
+  version   Int      @default(1)
+  isCurrent Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model About {
+  id          String   @id @default(cuid())
+  bio         String
+  avatarUrl   String?
+  headline    String?
+  location    String?
+  email       String?
+  phone       String?
+  socialLinks Json?
+  skills      String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Experience {
+  id           String   @id @default(cuid())
+  company      String
+  role         String
+  description  String?
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean  @default(false)
+  location     String?
+  companyUrl   String?
+  technologies String[]
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Education {
+  id           String   @id @default(cuid())
+  institution  String
+  degree       String
+  field        String
+  description  String?
+  startDate    DateTime
+  endDate      DateTime?
+  current      Boolean  @default(false)
+  gpa          String?
+  achievements String[]
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Journey {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  date         DateTime
+  category     String
+  url          String?
+  tags         String[]
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+}
