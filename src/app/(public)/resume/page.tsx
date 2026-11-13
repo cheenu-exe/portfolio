@@ -64,7 +64,7 @@ export default async function ResumePage() {
 
       <div className="mt-8">
         <iframe
-          src={resume.fileUrl}
+          src="/api/resume/download?inline=1"
           className="h-[800px] w-full rounded-xl border border-neutral-200 dark:border-neutral-800"
           title="Srinivasan G resume preview"
         />
