@@ -5,7 +5,8 @@ import { prisma } from "@/lib/prisma"
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
-export async function GET() {
+export async function GET(request: Request) {
+  const disposition = new URL(request.url).searchParams.get("inline") === "1" ? "inline" : "attachment"
   const resume = await prisma.resume.findFirst({
     where: { isCurrent: true },
     orderBy: { createdAt: "desc" },
@@ -56,7 +57,7 @@ export async function GET() {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="Srinivasan-Resume.pdf"; filename*=UTF-8\'\'Srinivasan-Resume.pdf',
+        "Content-Disposition": `${disposition}; filename="Srinivasan-Resume.pdf"; filename*=UTF-8''Srinivasan-Resume.pdf`,
         "Cache-Control": "private, no-store",
         "X-Content-Type-Options": "nosniff",
       },
