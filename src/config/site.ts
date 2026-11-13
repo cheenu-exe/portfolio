@@ -1,12 +1,12 @@
 export const siteConfig = {
-  name: "Srinivas",
-  title: "Srinivas — Full Stack Engineer & Cybersecurity Analyst",
+  name: "Cheenu",
+  title: "Srinivasan G — Full Stack Engineer & Cybersecurity Analyst",
   description:
     "Personal portfolio showcasing software engineering and cybersecurity projects, skills, and experience.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   ogImage: "/og.jpg",
   links: {
-    github: "https://github.com/srinivas",
+    github: "https://github.com/cheenu-exe",
     linkedin: "https://linkedin.com/in/srinivas",
     twitter: "https://twitter.com/srinivas",
   },
