@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server"
 import { isIP } from "node:net"
-import { prisma } from "@/lib/prisma"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 export async function GET(request: Request) {
+  const { prisma } = await import("@/lib/prisma")
   const disposition = new URL(request.url).searchParams.get("inline") === "1" ? "inline" : "attachment"
   const resume = await prisma.resume.findFirst({
     where: { isCurrent: true },
