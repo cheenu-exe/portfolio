@@ -2,13 +2,12 @@ import { prisma } from "@/lib/prisma"
 import { Button, Card } from "@/components/ui"
 import { Download, FileText } from "lucide-react"
 import { formatDate } from "@/lib/utils"
-import { notFound } from "next/navigation"
 
 export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "Resume",
-  description: "Download my resume",
+  description: "Download Srinivasan G's resume",
 }
 
 export default async function ResumePage() {
@@ -55,7 +54,7 @@ export default async function ResumePage() {
             </p>
           </div>
           <Button asChild>
-            <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer">
+            <a href="/api/resume/download">
               <Download className="mr-2 h-4 w-4" />
               Download
             </a>
@@ -67,7 +66,7 @@ export default async function ResumePage() {
         <iframe
           src={resume.fileUrl}
           className="h-[800px] w-full rounded-xl border border-neutral-200 dark:border-neutral-800"
-          title="Resume preview"
+          title="Srinivasan G resume preview"
         />
       </div>
     </div>
