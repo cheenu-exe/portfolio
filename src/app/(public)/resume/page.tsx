@@ -45,7 +45,7 @@ export default async function ResumePage() {
           </div>
           <div className="flex-1">
             <h3 className="font-medium text-neutral-900 dark:text-neutral-100">
-              {resume.title}
+              Srinivasan G — Resume
             </h3>
             <p className="text-sm text-neutral-500 dark:text-neutral-400">
               PDF &middot; Version {resume.version}
