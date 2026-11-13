@@ -1,14 +1,26 @@
 import { NextResponse } from "next/server"
-import { isIP } from "node:net"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 
 export async function GET(request: Request) {
+  const requestUrl = new URL(request.url)
+  const requestedId = requestUrl.searchParams.get("id")
+  const disposition = requestUrl.searchParams.get("inline") === "1" ? "inline" : "attachment"
   const { prisma } = await import("@/lib/prisma")
-  const disposition = new URL(request.url).searchParams.get("inline") === "1" ? "inline" : "attachment"
+
+  // Historical resume versions are only available to authenticated admins.
+  if (requestedId) {
+    const { auth } = await import("@/lib/auth")
+    const session = await auth()
+
+    if (session?.user?.role !== "admin") {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 })
+    }
+  }
+
   const resume = await prisma.resume.findFirst({
-    where: { isCurrent: true },
+    where: requestedId ? { id: requestedId } : { isCurrent: true },
     orderBy: { createdAt: "desc" },
     select: { fileUrl: true },
   })
@@ -25,15 +37,18 @@ export async function GET(request: Request) {
   }
 
   const hostname = fileUrl.hostname.toLowerCase()
-  const isLocalHost =
-    hostname === "localhost" ||
-    hostname.endsWith(".localhost") ||
-    hostname.endsWith(".local") ||
-    hostname === "metadata.google.internal"
+  const isAllowedBlobHost = hostname.endsWith(".public.blob.vercel-storage.com")
 
-  // Only fetch public HTTPS URLs; reject IP literals and local hostnames.
-  if (fileUrl.protocol !== "https:" || isIP(hostname) !== 0 || isLocalHost) {
-    return NextResponse.json({ error: "Resume URL must be a public HTTPS URL" }, { status: 400 })
+  // Resume files are stored in the app's configured Vercel Blob storage.
+  // Restrict the proxy to that host to prevent server-side request forgery.
+  if (
+    fileUrl.protocol !== "https:" ||
+    !isAllowedBlobHost ||
+    fileUrl.username ||
+    fileUrl.password ||
+    fileUrl.port
+  ) {
+    return NextResponse.json({ error: "Resume URL must be a public Vercel Blob URL" }, { status: 400 })
   }
 
   try {
