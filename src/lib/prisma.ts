@@ -7,10 +7,14 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPrismaClient() {
   if (!globalForPrisma.prisma) {
-    const connectionString = process.env.DATABASE_URL
+    const connectionString =
+      process.env.DATABASE_URL ??
+      process.env.cheenu_portfolio_PRISMA_DATABASE_URL ??
+      process.env.cheenu_portfolio_DATABASE_URL ??
+      process.env.cheenu_portfolio_POSTGRES_URL
 
     if (!connectionString) {
-      throw new Error("DATABASE_URL environment variable is not set")
+      throw new Error("No database connection URL is configured")
     }
 
     const adapter = new PrismaPg({ connectionString })
