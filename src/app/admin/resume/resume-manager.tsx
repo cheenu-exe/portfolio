@@ -47,7 +47,7 @@ export function ResumeManager({
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" asChild>
-              <a href={resume.fileUrl} target="_blank" rel="noopener noreferrer">
+              <a href={`/api/resume/download?id=${encodeURIComponent(resume.id)}`}>
                 <Download className="h-4 w-4" />
               </a>
             </Button>
