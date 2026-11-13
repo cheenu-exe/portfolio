@@ -22,7 +22,7 @@ export function ResumeManager({
           Upload New Resume
         </h3>
         <form action={action} className="space-y-3">
-          <Input name="title" label="Title" placeholder="My Resume - 2026" />
+          <Input name="title" label="Title" placeholder="Srinivasan G - Resume - 2026" />
           <Input name="fileUrl" label="File URL" placeholder="https://..." />
           <Input name="fileSize" label="File Size (bytes)" type="number" />
           <Button type="submit" disabled={pending}>
@@ -36,7 +36,7 @@ export function ResumeManager({
           <FileText className="h-8 w-8 text-neutral-400" />
           <div className="flex-1">
             <p className="font-medium text-neutral-900 dark:text-neutral-100">
-              {resume.title}
+              {resume.title.replace(/joshua/gi, "Srinivasan")}
               {resume.isCurrent && (
                 <span className="ml-2 text-xs text-green-600">Current</span>
               )}
