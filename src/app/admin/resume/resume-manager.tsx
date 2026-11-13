@@ -36,7 +36,7 @@ export function ResumeManager({
           <FileText className="h-8 w-8 text-neutral-400" />
           <div className="flex-1">
             <p className="font-medium text-neutral-900 dark:text-neutral-100">
-              {resume.title.replace(/joshua/gi, "Srinivasan")}
+              "Srinivasan G — Resume"
               {resume.isCurrent && (
                 <span className="ml-2 text-xs text-green-600">Current</span>
               )}
